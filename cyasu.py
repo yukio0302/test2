@@ -7,10 +7,24 @@ import pandas as pd
 
 # 加盟店データを準備する（ここでは仮のデータを指定）
 加盟店_data = pd.DataFrame({
-    "name": ["浅野日本酒店"],  # 店名
-    "lat": [34.70286004882703],       # 緯度（大阪市北区の適当な座標）
-    "lon": [135.50515146931434],      # 経度（大阪市北区の適当な座標）
-    "url": ["TEL 06-6585-0963"]  # その他の情報（TELなど）
+    "name": [
+        "(株)兼中 田中商店", "ｸﾜﾊﾗ食糧(株)", "酒のいろは - (有)鈴木商店",
+        "(有)石黒商店", "ｾﾗｰｽﾞ大谷地店", "(有)根本商店", "生活協同組合ｺｰﾌﾟさっぽろ ｿｼｱ店",
+        "(株)ﾏﾙﾐ 北栄商店", "地酒･ﾜｲﾝ屋 みのや", "(株)ｲﾁﾏｽ"
+    ],  # 店名
+    "lat": [
+        43.0909579, 43.1150863, 43.1096344, 43.0419761, 43.0211144,
+        43.0058261, 42.9913498, 43.1049105, 41.7999172, 41.7798136
+    ],  # 緯度
+    "lon": [
+        141.3425112, 141.3401039, 141.3432736, 141.414893, 141.4470901,
+        141.3493239, 141.3335263, 141.3777932, 140.7345388, 140.7850594
+    ],  # 経度
+    "url": [
+        "TEL 06-6585-0963", "TEL 03-xxxx-xxxx", "TEL 03-xxxx-xxxx", "TEL 03-xxxx-xxxx",
+        "TEL 03-xxxx-xxxx", "TEL 03-xxxx-xxxx", "TEL 03-xxxx-xxxx", "TEL 03-xxxx-xxxx",
+        "TEL 03-xxxx-xxxx", "TEL 03-xxxx-xxxx"
+    ]  # その他の情報（TELなど）
 })
 
 # OpenCage APIの設定
@@ -55,11 +69,12 @@ if station_name:
         for _, store in 加盟店_data.iterrows():
             store_location = (store["lat"], store["lon"])
             distance = geodesic((search_lat, search_lon), store_location).km
+            # 距離が10km以内の店舗をマーカーで追加
             if distance <= 10:
                 stores_in_range += 1
                 folium.Marker(
                     store_location,
-                    popup=f"<a href='#{store['url']}' target='_blank'>{store['name']}</a>",
+                    popup=f"<a href='#{store['url']}' target='_blank'>{store['name']}</a> ({distance:.2f}km)",
                     icon=folium.Icon(color="green")
                 ).add_to(m)
 
